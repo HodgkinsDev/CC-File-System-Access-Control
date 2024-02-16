@@ -20,7 +20,7 @@ Run the installer
 
 2. **Setting Read-Only Paths**: Use the `fs.setReadOnlyPath(path, readOnly)` function to set paths as read-only or not. Pass the path as a string and `true` for `readOnly` if you want to make it read-only, and `false` to make it writable.
 
-3. **File System Operations**: All file system operations such as opening files, writing to files, moving files, copying files, and deleting files are intercepted by the script. If the path matches a read-only path, write and delete operations are blocked, and read operations are redirected to read-only mode.
+3. **File System Operations**: All file system operations such as opening files, writing to files, moving files, copying files, creating directories, and deleting files and directories are intercepted by the script. If the path matches a read-only path, write, delete, and modification operations are blocked, and read operations are redirected to read-only mode.
 
 ## Functions
 
@@ -51,6 +51,10 @@ The script also intercepts the following file system operations to ensure read-o
 - `fs.delete(path)`: Prevents deletion of files and directories within read-only paths.
 - `fs.move(fromPath, toPath)`: Prevents moving files and directories into or out of read-only paths.
 - `fs.copy(fromPath, toPath)`: Prevents copying files and directories into or out of read-only paths.
+- `fs.write(path, text)`: Prevents writing to files within read-only paths.
+- `fs.append(path, text)`: Prevents appending to files within read-only paths.
+- `fs.makeDir(path)`: Prevents creating directories within read-only paths.
+- `fs.deleteDir(path)`: Prevents deleting directories within read-only paths.
 
 ## Example
 
