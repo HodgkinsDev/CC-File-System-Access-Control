@@ -2,6 +2,18 @@
 
 This Lua script provides functionality to control read and write access to specific paths in the file system.
 
+## Installation
+
+Install CC-File System Access Control
+
+**Step 1**
+
+    pastebin get z9dp631q <NAME_OF_FILE>
+**Step 2**
+
+Run the installer
+&#x200B;
+
 ## How to Use
 
 1. **Initialization**: This needs to run as a startup file so it overwrites system functions
