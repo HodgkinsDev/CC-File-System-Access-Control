@@ -16,7 +16,7 @@ Run the installer
 
 ## How to Use
 
-1. **Initialization**: This needs to run as a startup file so it overwrites system functions.
+1. **Initialization**: This must run as a startup file to overwrite system functions or paste this code into your existing startup file!
 
 2. **Setting Read-Only Paths**: Use the `fs.setReadOnlyPath(path, readOnly)` function to set paths as read-only or not. Pass the path as a string and `true` for `readOnly` if you want to make it read-only, and `false` to make it writable.
 
