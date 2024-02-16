@@ -5,6 +5,9 @@ local old_fsDelete = _G["fs"]["delete"]
 local old_fsMove = _G["fs"]["move"]
 local old_fsCopy = _G["fs"]["copy"]
 local old_fsWrite = _G["fs"]["write"]
+local old_fsAppend = _G["fs"]["append"]
+local old_fsMakeDir = _G["fs"]["makeDir"]
+local old_fsDeleteDir = _G["fs"]["deleteDir"]
 
 -- Helper function to normalize paths
 local function normalizePath(path)
@@ -114,6 +117,54 @@ _G["fs"]["write"] = function(path, text)
         return nil
     else
         return old_fsWrite(path, text)
+    end
+end
+
+_G["fs"]["append"] = function(path, text)
+    local isReadOnlyPath = false
+    path = normalizePath(path)
+    for _, readOnlyPath in ipairs(readOnlyPaths) do
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
+            isReadOnlyPath = true
+            break
+        end
+    end
+    if isReadOnlyPath then
+        return nil
+    else
+        return old_fsAppend(path, text)
+    end
+end
+
+_G["fs"]["makeDir"] = function(path)
+    local isReadOnlyPath = false
+    path = normalizePath(path)
+    for _, readOnlyPath in ipairs(readOnlyPaths) do
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
+            isReadOnlyPath = true
+            break
+        end
+    end
+    if isReadOnlyPath then
+        return nil
+    else
+        return old_fsMakeDir(path)
+    end
+end
+
+_G["fs"]["deleteDir"] = function(path)
+    local isReadOnlyPath = false
+    path = normalizePath(path)
+    for _, readOnlyPath in ipairs(readOnlyPaths) do
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
+            isReadOnlyPath = true
+            break
+        end
+    end
+    if isReadOnlyPath then
+        return nil
+    else
+        return old_fsDeleteDir(path)
     end
 end
 
