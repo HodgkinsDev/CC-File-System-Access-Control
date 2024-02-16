@@ -1,4 +1,4 @@
-local readOnlyPaths = { }
+local readOnlyPaths = {}
 local old_fsOpen = _G["fs"]["open"]
 local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
 
@@ -12,7 +12,7 @@ _G["fs"]["open"] = function(path, mode)
     end
     if not isReadOnlyPath then
         return old_fsOpen(path, mode)
-    elseif mode == 'w' then
+    elseif mode == 'w' or mode == 'd' then
         return nil
     else
         return old_fsOpen(path, 'r')
