@@ -16,11 +16,11 @@ Run the installer
 
 ## How to Use
 
-1. **Initialization**: This needs to run as a startup file so it overwrites system functions
+1. **Initialization**: This needs to run as a startup file so it overwrites system functions.
 
 2. **Setting Read-Only Paths**: Use the `fs.setReadOnlyPath(path, readOnly)` function to set paths as read-only or not. Pass the path as a string and `true` for `readOnly` if you want to make it read-only, and `false` to make it writable.
 
-3. **File System Operations**: All file system operations such as opening files are intercepted by the script. If the path matches a read-only path, write operations are blocked, and read operations are redirected to read-only mode.
+3. **File System Operations**: All file system operations such as opening files, writing to files, moving files, copying files, and deleting files are intercepted by the script. If the path matches a read-only path, write and delete operations are blocked, and read operations are redirected to read-only mode.
 
 ## Functions
 
@@ -44,24 +44,19 @@ Overrides the default `fs.isReadOnly` function to check whether a path is read-o
 
 - `path`: (string) The path to check for read-only status.
 
+### Additional Functions
+
+The script also intercepts the following file system operations to ensure read-only paths are respected:
+
+- `fs.delete(path)`: Prevents deletion of files and directories within read-only paths.
+- `fs.move(fromPath, toPath)`: Prevents moving files and directories into or out of read-only paths.
+- `fs.copy(fromPath, toPath)`: Prevents copying files and directories into or out of read-only paths.
+
 ## Example
 
 ```lua
--- Set "/system/" path as read-only
-fs.setReadOnlyPath("/system/", true)
+-- Set "/test/" path as read-only
+fs.setReadOnlyPath("/test/", true)
 
--- Try to open a file in read-only mode
-local file = fs.open("/system/file.txt", "r")
-if file then
-    print("File opened successfully.")
-else
-    print("Error: File could not be opened.")
-end
-
--- Try to open a file in write mode
-local file = fs.open("/system/file.txt", "w")
-if file then
-    print("File opened successfully.")
-else
-    print("Error: File could not be opened.")
-end
+-- Set "/test/" path as read/write
+fs.setReadOnlyPath("/test/", false)
