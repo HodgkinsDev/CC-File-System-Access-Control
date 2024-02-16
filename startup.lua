@@ -1,4 +1,4 @@
-local readOnlyPaths = {"bf/"}
+local readOnlyPaths = {}
 local old_fsOpen = _G["fs"]["open"]
 local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
 local old_fsDelete = _G["fs"]["delete"]
