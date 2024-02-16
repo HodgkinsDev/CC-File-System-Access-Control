@@ -1,11 +1,18 @@
-local readOnlyPaths = {}
+local readOnlyPaths = {"test/"}
 local old_fsOpen = _G["fs"]["open"]
 local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
+local old_fsDelete = _G["fs"]["delete"]
+
+-- Helper function to normalize paths
+local function normalizePath(path)
+    return path:gsub("[\\/]$", "") -- Remove trailing slashes
+end
 
 _G["fs"]["open"] = function(path, mode)
     local isReadOnlyPath = false
+    path = normalizePath(path)
     for _, readOnlyPath in ipairs(readOnlyPaths) do
-        if path:sub(1, #readOnlyPath) == readOnlyPath then
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
             isReadOnlyPath = true
             break
         end
@@ -21,8 +28,9 @@ end
 
 _G["fs"]["isReadOnly"] = function(path)
     local isReadOnlyPath = false
+    path = normalizePath(path)
     for _, readOnlyPath in ipairs(readOnlyPaths) do
-        if path:sub(1, #readOnlyPath) == readOnlyPath then
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
             isReadOnlyPath = true
             break
         end
@@ -31,6 +39,22 @@ _G["fs"]["isReadOnly"] = function(path)
         return old_fsIsReadOnly(path)
     else
         return true
+    end
+end
+
+_G["fs"]["delete"] = function(path)
+    local isReadOnlyPath = false
+    path = normalizePath(path)
+    for _, readOnlyPath in ipairs(readOnlyPaths) do
+        if path:sub(1, #normalizePath(readOnlyPath)) == normalizePath(readOnlyPath) then
+            isReadOnlyPath = true
+            break
+        end
+    end
+    if isReadOnlyPath then
+        return nil
+    else
+        return old_fsDelete(path)
     end
 end
 
