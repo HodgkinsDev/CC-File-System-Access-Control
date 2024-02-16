@@ -1,4 +1,4 @@
-local readOnlyPaths = {}
+local readOnlyPaths = {"bf/"}
 local old_fsOpen = _G["fs"]["open"]
 local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
 local old_fsDelete = _G["fs"]["delete"]
@@ -11,7 +11,13 @@ local old_fsDeleteDir = _G["fs"]["deleteDir"]
 
 -- Helper function to normalize paths
 local function normalizePath(path)
-    return path:gsub("[\\/]$", "") -- Remove trailing slashes
+    -- Replace any occurrences of ".." with an empty string
+    path = path:gsub("%.%.", "")
+    -- Remove any occurrences of consecutive slashes
+    path = path:gsub("[\\/]([\\/]+)", "/")
+    -- Remove trailing slashes
+    path = path:gsub("[\\/]$", "")
+    return path
 end
 
 _G["fs"]["open"] = function(path, mode)
