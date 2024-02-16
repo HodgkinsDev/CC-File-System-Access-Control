@@ -1,13 +1,5 @@
 local readOnlyPaths = {}
-local old_fsOpen = _G["fs"]["open"]
-local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
-local old_fsDelete = _G["fs"]["delete"]
-local old_fsMove = _G["fs"]["move"]
-local old_fsCopy = _G["fs"]["copy"]
-local old_fsWrite = _G["fs"]["write"]
-local old_fsAppend = _G["fs"]["append"]
-local old_fsMakeDir = _G["fs"]["makeDir"]
-local old_fsDeleteDir = _G["fs"]["deleteDir"]
+local hiddenPaths = {}
 
 -- Helper function to normalize paths
 local function normalizePath(path)
@@ -19,6 +11,46 @@ local function normalizePath(path)
     path = path:gsub("[\\/]$", "")
     return path
 end
+
+-- Function to hide a directory or file
+local function hidePath(path)
+    local normalizedPath = fs.combine(path, "")  -- Ensure path has a trailing slash
+    hiddenPaths[normalizedPath] = true
+    print("Path hidden:", normalizedPath)
+end
+
+-- Function to unhide a directory or file
+local function unhidePath(path)
+    local normalizedPath = fs.combine(path, "")  -- Ensure path has a trailing slash
+    hiddenPaths[normalizedPath] = nil
+    print("Path unhidden:", normalizedPath)
+end
+
+-- Override fs.list function to exclude hidden directories and files
+local old_fsList = fs.list
+fs.list = function(path)
+    local files = old_fsList(path)
+    local filteredFiles = {}
+    for _, file in ipairs(files) do
+        local fullPath = fs.combine(path, file)
+        local normalizedPath = fs.combine(path, "")  -- Ensure path has a trailing slash
+        if not hiddenPaths[fullPath] and not hiddenPaths[normalizedPath .. "." .. file] then
+            table.insert(filteredFiles, file)
+        end
+    end
+    return filteredFiles
+end
+
+-- Override fs functions related to file operations to support read-only paths
+local old_fsOpen = _G["fs"]["open"]
+local old_fsIsReadOnly = _G["fs"]["isReadOnly"]
+local old_fsDelete = _G["fs"]["delete"]
+local old_fsMove = _G["fs"]["move"]
+local old_fsCopy = _G["fs"]["copy"]
+local old_fsWrite = _G["fs"]["write"]
+local old_fsAppend = _G["fs"]["append"]
+local old_fsMakeDir = _G["fs"]["makeDir"]
+local old_fsDeleteDir = _G["fs"]["deleteDir"]
 
 _G["fs"]["open"] = function(path, mode)
     local isReadOnlyPath = false
@@ -174,6 +206,7 @@ _G["fs"]["deleteDir"] = function(path)
     end
 end
 
+-- Function to set a path as read-only or not
 function fs.setReadOnlyPath(path, readOnly)
     if type(path) == "string" and type(readOnly) == "boolean" then
         if readOnly then
@@ -189,4 +222,13 @@ function fs.setReadOnlyPath(path, readOnly)
     else
         print("Invalid arguments for fs.setReadOnlyPath")
     end
+end
+
+-- Add commands to fs namespace to hide and unhide directories and files
+fs.hide = function(path)
+    hidePath(path)
+end
+
+fs.unhide = function(path)
+    unhidePath(path)
 end
