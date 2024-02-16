@@ -8,7 +8,7 @@ Install CC-File System Access Control
 
 **Step 1**
 
-    pastebin get VLjBk8ZY  startup.lua
+    pastebin get VLjBk8ZY startup.lua
 **Step 2**
 
 Run the installer
