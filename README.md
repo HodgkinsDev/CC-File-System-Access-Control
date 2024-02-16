@@ -43,6 +43,12 @@ Overrides the default `fs.open` function to control file opening behavior based 
 Overrides the default `fs.isReadOnly` function to check whether a path is read-only.
 
 - `path`: (string) The path to check for read-only status.
+- 
+### `fs.normalizePath(path)`
+
+Normalizes the provided path to prevent directory traversal.
+
+- `path`: (string) The path to normalize.
 
 ### Additional Functions
 
