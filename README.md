@@ -1,72 +1,75 @@
-# File System Access Control
+# CC-File-System-Access-Control
 
-This Lua script provides functionality to control read and write access to specific paths in the file system.
+CC-File-System-Access-Control is a Lua script designed for use with ComputerCraft, a modification for Minecraft that allows players to interact with computers and robots using Lua programming. This script provides enhanced control over file system access, including the ability to hide directories and files, mark paths as read-only, and override certain file system functions.
 
-## Installation
+## Features
 
-Install CC-File System Access Control
+- **Hiding Paths**: Allows users to hide directories and files from being listed or accessed through the file system.
+- **Read-only Paths**: Supports marking specific paths as read-only, preventing modifications such as writing, deleting, moving, or copying files.
+- **Function Overrides**: Overrides default file system functions to enforce access control policies on specified paths.
+- **Path Normalization**: Normalizes paths to ensure consistency and prevent path traversal attacks.
+- **Dynamic Configuration**: Provides functions to dynamically set paths as read-only or remove read-only status.
 
-**Step 1**
+## Usage
 
-    pastebin get VLjBk8ZY startup.lua
-**Step 2**
+### Installation
 
-Run the installer
-&#x200B;
+To install the script:
 
-## How to Use
+1. Ensure you have ComputerCraft installed in your Minecraft game.
+2. Run the following command in ComputerCraft:
 
-1. **Initialization**: This must run as a startup file to overwrite system functions or paste this code into your existing startup file!
+```
+pastebin get VLjBk8ZY startup.lua
+```
 
-2. **Setting Read-Only Paths**: Use the `fs.setReadOnlyPath(path, readOnly)` function to set paths as read-only or not. Pass the path as a string and `true` for `readOnly` if you want to make it read-only, and `false` to make it writable.
+This command downloads the script and saves it as `startup.lua`. Ensure that this command is executed at startup to override the system functions. If you already have a `startup.lua` file, you can paste the contents of into your existing `startup.lua` file.
 
-3. **File System Operations**: All file system operations such as opening files, writing to files, moving files, copying files, creating directories, and deleting files and directories are intercepted by the script. If the path matches a read-only path, write, delete, and modification operations are blocked, and read operations are redirected to read-only mode.
+By following these installation instructions and utilizing the provided functions, you can integrate the access control features into your Lua programs in ComputerCraft.
 
-## Functions
+### Usage in Lua Programs
 
-### `fs.setReadOnlyPath(path, readOnly)`
+To use the script in your Lua programs:
 
-Sets the read-only status of a given path.
+1. Import the script into your Lua program using `os.loadAPI("CC-File-System-Access-Control.lua")`.
+2. Use the provided functions to hide paths, mark paths as read-only, and perform file system operations.
 
-- `path`: (string) The path to set as read-only or writable.
-- `readOnly`: (boolean) Set to `true` to make the path read-only, `false` to make it writable.
+### Available Functions
 
-### `fs.open(path, mode)`
+- `fs.hide(path)`: Hide the specified directory or file.
+- `fs.unhide(path)`: Unhide the specified directory or file.
+- `fs.setReadOnlyPath(path, readOnly)`: Mark the specified path as read-only (`true`) or writable (`false`).
+- Override of standard `fs` functions such as:
+  - `open`
+  - `isReadOnly`
+  - `delete`
+  - `move`
+  - `copy`
+  - `write`
+  - `append`
+  - `makeDir`
+  - `deleteDir`
 
-Overrides the default `fs.open` function to control file opening behavior based on read-only paths.
+These functions enable enhanced control over file system operations, including hiding paths, marking paths as read-only, and overriding default file system functions.
 
-- `path`: (string) The path of the file to open.
-- `mode`: (string) The mode in which to open the file (`r` for read, `w` for write, etc.).
-
-### `fs.isReadOnly(path)`
-
-Overrides the default `fs.isReadOnly` function to check whether a path is read-only.
-
-- `path`: (string) The path to check for read-only status.
-- 
-### `fs.normalizePath(path)`
-
-Normalizes the provided path to prevent directory traversal.
-
-- `path`: (string) The path to normalize.
-
-### Additional Functions
-
-The script also intercepts the following file system operations to ensure read-only paths are respected:
-
-- `fs.delete(path)`: Prevents deletion of files and directories within read-only paths.
-- `fs.move(fromPath, toPath)`: Prevents moving files and directories into or out of read-only paths.
-- `fs.copy(fromPath, toPath)`: Prevents copying files and directories into or out of read-only paths.
-- `fs.write(path, text)`: Prevents writing to files within read-only paths.
-- `fs.append(path, text)`: Prevents appending to files within read-only paths.
-- `fs.makeDir(path)`: Prevents creating directories within read-only paths.
-- `fs.deleteDir(path)`: Prevents deleting directories within read-only paths.
-
-## Example
+### Example
 
 ```lua
--- Set "/test/" path as read-only
-fs.setReadOnlyPath("/test/", true)
+-- Load the CC-File-System-Access-Control API
+os.loadAPI("CC-File-System-Access-Control.lua")
 
--- Set "/test/" path as read/write
-fs.setReadOnlyPath("/test/", false)
+-- Hide a directory
+fs.hide("path/to/directory")
+
+-- Mark a path as read-only
+fs.setReadOnlyPath("path/to/file", true)
+
+-- Perform file system operations with enforced access control
+local file = fs.open("path/to/file", "w")
+if file then
+    file.write("Hello, world!")
+    file.close()
+else
+    print("Cannot write to read-only file.")
+end
+```
