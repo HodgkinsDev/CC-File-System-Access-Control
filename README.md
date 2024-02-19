@@ -23,7 +23,7 @@ To install the script:
 pastebin get VLjBk8ZY startup.lua
 ```
 
-This command downloads the script and saves it as `startup.lua`. Ensure that this command is executed at startup to override the system functions. If you already have a `startup.lua` file, you can paste the contents of into your existing `startup.lua` file.
+This command downloads the script and saves it as `startup.lua`. Ensure that this command is executed at startup to override the system functions. If you already have a `startup.lua` file, you can paste the code of CC-File-System-Access-Control into your existing `startup.lua` file.
 
 By following these installation instructions and utilizing the provided functions, you can integrate the access control features into your Lua programs in ComputerCraft.
 
