@@ -32,9 +32,8 @@ By following these installation instructions and utilizing the provided function
 - `fs.hide(path)`: Hide the specified directory or file.
 - `fs.unhide(path)`: Unhide the specified directory or file.
 - `fs.setReadOnlyPath(path, readOnly)`: Mark the specified path as read-only (`true`) or writable (`false`).
-- Override of standard `fs` functions such as:
+- Overrides standard `fs` functions such as:
   - `open`
-  - `isReadOnly`
   - `delete`
   - `move`
   - `copy`
