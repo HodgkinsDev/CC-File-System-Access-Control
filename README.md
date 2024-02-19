@@ -27,13 +27,6 @@ This command downloads the script and saves it as `startup.lua`. Ensure that thi
 
 By following these installation instructions and utilizing the provided functions, you can integrate the access control features into your Lua programs in ComputerCraft.
 
-### Usage in Lua Programs
-
-To use the script in your Lua programs:
-
-1. Import the script into your Lua program using `os.loadAPI("CC-File-System-Access-Control.lua")`.
-2. Use the provided functions to hide paths, mark paths as read-only, and perform file system operations.
-
 ### Available Functions
 
 - `fs.hide(path)`: Hide the specified directory or file.
@@ -55,21 +48,15 @@ These functions enable enhanced control over file system operations, including h
 ### Example
 
 ```lua
--- Load the CC-File-System-Access-Control API
-os.loadAPI("CC-File-System-Access-Control.lua")
-
 -- Hide a directory
 fs.hide("path/to/directory")
 
 -- Mark a path as read-only
 fs.setReadOnlyPath("path/to/file", true)
 
--- Perform file system operations with enforced access control
-local file = fs.open("path/to/file", "w")
-if file then
-    file.write("Hello, world!")
-    file.close()
-else
-    print("Cannot write to read-only file.")
-end
-```
+-- Unhide a directory
+fs.unhide("path/to/directory")
+
+-- Mark a path as read/write
+fs.setReadOnlyPath("path/to/file", false)
+
